@@ -7,7 +7,7 @@
   <span class="font-bold text-xl text-indigo-950 text-center uppercase pl-4 pt-3">Rush Gym Login</span>
   <span class="text-center text-indigo-950 font-medium text-xs pb-3">Admin Panel</span>
   <div class="border w-full"></div>
-  <div class="flex-col flex gap-2 p-2 mb-4">
+  <div class="flex-col flex gap-2 p-2 px-4 mb-4">
     <span class="capitalize font-medium text-sm ">Email</span>
     <input type="email"  class="border rounded-md p-2 focus:outline-none mb-2">
     <span class="capitalize font-medium text-sm ">Password</span>
