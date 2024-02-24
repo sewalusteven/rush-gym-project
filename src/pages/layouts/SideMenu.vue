@@ -3,9 +3,10 @@ import {
   ChevronRightIcon,
   ArrowLeftIcon, Bars3Icon,HomeIcon,
   CogIcon, ListBulletIcon,
-  TruckIcon,
+  QueueListIcon,
   InboxIcon,
-  PaperAirplaneIcon,
+  ChartBarIcon,
+    UsersIcon,
   EnvelopeIcon,
   BanknotesIcon,
   PowerIcon,
@@ -17,6 +18,7 @@ const isMinified =  ref(false)
 const isPhoneOpen =  ref(false)
 
 const activeTab =  ref('dashboard')
+const toggle =  ref(false)
 </script>
 
 <template>
@@ -25,10 +27,10 @@ const activeTab =  ref('dashboard')
         class="bg-white invisible lg:visible font-bold text-indigo-950-950  text-3xl w-5 h-5 rounded-full absolute -right-2 top-6 z-50  cursor-pointer"
         :class="isMinified && 'rotate-180'" @click="isMinified = !isMinified"/>
     <Bars3Icon v-if="isPhoneOpen"
-               class="text-white visible lg:invisible font-bold  text-3xl w-8 h-8  absolute right-2 top-5  cursor-pointer"
+               class="text-white visible lg:invisible font-bold  text-3xl w-8 h-8  absolute right-2 top-3  cursor-pointer"
                :class="!isPhoneOpen && 'rotate-180'" @click="isPhoneOpen = !isPhoneOpen"/>
     <XMarkIcon v-if="!isPhoneOpen"
-               class="text-white visible lg:invisible font-bold  text-3xl w-8 h-8  absolute right-2 top-5  cursor-pointer"
+               class="text-white visible lg:invisible font-bold  text-3xl w-8 h-8  absolute right-2 top-3  cursor-pointer"
                :class="!isPhoneOpen && 'rotate-180'" @click="isPhoneOpen = !isPhoneOpen"/>
 
 
@@ -44,6 +46,51 @@ const activeTab =  ref('dashboard')
           <span :class="`text-base flex-1 duration-200 ${isMinified && 'hidden'}`">Dashboard</span>
         </div>
 
+        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <span class="text-2xl block float-left">
+         <UsersIcon class="w-5 h-5 "/>
+        </span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Members</span>
+        </div>
+
+        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <span class="text-2xl block float-left">
+         <BanknotesIcon class="w-5 h-5 "/>
+        </span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Sales</span>
+        </div>
+
+        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <span class="text-2xl block float-left">
+         <ChartBarIcon class="w-5 h-5 "/>
+        </span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Reports</span>
+        </div>
+
+        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <span class="text-2xl block float-left">
+         <EnvelopeIcon class="w-5 h-5 "/>
+        </span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Notifications</span>
+        </div>
+
+
+        <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold rounded-md mt-2 ${activeTab === 'settings' && 'text-white font-bold'}`" @click="toggle = !toggle">
+          <span :class="`text-2xl block float-left`"><ChevronRightIcon :class="`w-5 h-5 duration-300 ${toggle && 'rotate-90'}`"/></span>
+          <span :class="`text-sm capitalize font-medium flex-1 duration-200 ${isMinified && 'hidden'}`"> Advanced Settings </span>
+
+        </div>
+        <div v-show="toggle">
+          <div :class="` text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+            <span class="text-2xl block float-left"><QueueListIcon class="w-5 h-5"/></span>
+            <span :class="`${isMinified && 'hidden'}`">Services</span>
+          </div>
+          <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+            <span class="text-2xl block float-left"><UsersIcon class="w-5 h-5"/></span>
+            <span :class="`${isMinified && 'hidden'}`">Memberships</span>
+          </div>
+        </div>
+
         <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'profile' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <UserIcon class="w-5 h-5 "/>
@@ -53,7 +100,7 @@ const activeTab =  ref('dashboard')
 
       </div>
     </div>
-    <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 font-bold  bg-purple-700`">
+    <div :class="`text-gray-300 ${isMinified && 'justify-center'} ${!isPhoneOpen && 'hidden lg:block'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 font-bold  bg-purple-700`">
         <span class="text-2xl block float-left">
          <PowerIcon class="w-5 h-5 "/>
         </span>
