@@ -1,4 +1,5 @@
 import './style.css'
+import 'maz-ui/styles'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

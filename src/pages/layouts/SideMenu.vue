@@ -12,13 +12,53 @@ import {
   PowerIcon,
   UserIcon, XMarkIcon, PlusCircleIcon
 } from "@heroicons/vue/24/outline";
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
 
 const isMinified =  ref(false)
 const isPhoneOpen =  ref(false)
 
 const activeTab =  ref('dashboard')
+const activeSubMenuItem =  ref('')
+const route =  useRoute()
 const toggle =  ref(false)
+
+const getActiveTab = () => {
+  let path = route.path;
+  if (route.fullPath === '/admin') {
+    activeTab.value = 'dashboard'
+  }
+
+  if (path.includes('services') || path.includes('plans') ) {
+   activeTab.value ='settings'
+    if (path.includes('services')) {
+      activeSubMenuItem.value = `services`
+    }
+    if (path.includes('plans')) {
+      activeSubMenuItem.value = `plans`
+    }
+  }
+
+  if (path.includes('members')) {
+    activeTab.value = 'members'
+  }
+
+  if (path.includes('reports')) {
+    activeTab.value = 'reports'
+  }
+
+  if (path.includes('sales')) {
+    activeTab.value = 'sales'
+  }
+}
+
+watch(route, () => {
+  getActiveTab()
+})
+
+onMounted(() => {
+  getActiveTab()
+})
 </script>
 
 <template>
@@ -39,35 +79,35 @@ const toggle =  ref(false)
 
       <div :class="`pt-2 mt-9 duration-300 ${!isPhoneOpen && 'hidden lg:block'}`">
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} duration-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'dashboard' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin" :class="`text-gray-300 ${isMinified && 'justify-center'} duration-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'dashboard' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <HomeIcon class="w-5 h-5 "/>
         </span>
           <span :class="`text-base flex-1 duration-200 ${isMinified && 'hidden'}`">Dashboard</span>
-        </div>
+        </RouterLink>
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin/members" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'members' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <UsersIcon class="w-5 h-5 "/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Members</span>
-        </div>
+        </RouterLink>
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin/sales" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'sales' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <BanknotesIcon class="w-5 h-5 "/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Sales</span>
-        </div>
+        </RouterLink>
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin/reports" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'reports' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <ChartBarIcon class="w-5 h-5 "/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Reports</span>
-        </div>
+        </RouterLink>
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'settings' && 'font-bold text-white bg-indigo-500'}`">
+        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'notifications' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <EnvelopeIcon class="w-5 h-5 "/>
         </span>
@@ -75,20 +115,20 @@ const toggle =  ref(false)
         </div>
 
 
-        <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold rounded-md mt-2 ${activeTab === 'settings' && 'text-white font-bold'}`" @click="toggle = !toggle">
+        <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold rounded-md mt-2 ${activeTab === 'settings' && 'text-white font-bold bg-indigo-500'}`" @click="toggle = !toggle">
           <span :class="`text-2xl block float-left`"><ChevronRightIcon :class="`w-5 h-5 duration-300 ${toggle && 'rotate-90'}`"/></span>
           <span :class="`text-sm capitalize font-medium flex-1 duration-200 ${isMinified && 'hidden'}`"> Advanced Settings </span>
 
         </div>
         <div v-show="toggle">
-          <div :class="` text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+          <RouterLink to="/admin/services" :class="`${activeSubMenuItem === 'services' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
             <span class="text-2xl block float-left"><QueueListIcon class="w-5 h-5"/></span>
             <span :class="`${isMinified && 'hidden'}`">Services</span>
-          </div>
-          <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+          </RouterLink>
+          <RouterLink to="/admin/plans" :class="`${activeSubMenuItem === 'plans' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
             <span class="text-2xl block float-left"><UsersIcon class="w-5 h-5"/></span>
             <span :class="`${isMinified && 'hidden'}`">Memberships</span>
-          </div>
+          </RouterLink>
         </div>
 
         <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'profile' && 'font-bold text-white bg-indigo-500'}`">
