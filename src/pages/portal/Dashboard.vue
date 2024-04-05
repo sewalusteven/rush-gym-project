@@ -3,8 +3,14 @@ import { UsersIcon, CurrencyDollarIcon, BanknotesIcon, UserPlusIcon } from "@her
 import StatCard from "@/components/StatCard.vue";
 import MembersTable from "@/components/MembersTable.vue";
 import SaleRecord from "@/components/SaleRecord.vue";
+import AddMemberDialog from "@/components/AddMemberDialog.vue";
+import {ref} from "vue";
 
+const dialogOpen =  ref(false);
 
+const closeDialog = () => {
+  dialogOpen.value = false
+}
 </script>
 
 <template>
@@ -17,10 +23,10 @@ import SaleRecord from "@/components/SaleRecord.vue";
     <StatCard title="Total Members" stat="250" :icon="UsersIcon" from="from-purple-950" to="to-gray-800" />
   </div>
   <div class="flex flex-col lg:flex-row gap-4">
-    <div class="w-full lg:w-8/12 flex flex-col bg-white rounded-sm shadow ">
+    <div class="w-full flex flex-col bg-white rounded-sm shadow ">
       <div id="head" class="flex flex-row items-center justify-between p-2 px-3">
         <span class=" font-medium capitalize">All Members</span>
-        <button class="bg-indigo-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
+        <button @click="dialogOpen = !dialogOpen" class="bg-indigo-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
           <span class="uppercase text-sm font-bold">Add Member</span>
           <UserPlusIcon class="w-5 h-5" />
         </button>
@@ -30,15 +36,10 @@ import SaleRecord from "@/components/SaleRecord.vue";
         <MembersTable />
       </div>
     </div>
-    <div class="w-full lg:w-4/6 h-fit  flex flex-col bg-white rounded-sm shadow">
-      <span class=" font-medium p-4 uppercase">Record Sale</span>
-      <div class="border "></div>
-      <SaleRecord />
-
-    </div>
   </div>
 
 </div>
+  <AddMemberDialog :dialog-open="dialogOpen" @closeDialog="closeDialog" />
 </template>
 
 <style scoped>

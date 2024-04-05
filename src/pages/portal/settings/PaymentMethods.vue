@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Breadcrumbs from "@/components/Breadcrumbs.vue";
-import {useServiceStore} from "@/stores/services";
+import {usePaymentMethodStore} from "@/stores/payment-methods";
 import {useRoute} from "vue-router";
 import {computed, onMounted, ref, watch} from "vue";
 import MazTableCell from "maz-ui/components/MazTableCell";
@@ -14,57 +14,55 @@ import {useUtilities} from "@/composables/useUtilities";
 import { TrashIcon } from "@heroicons/vue/24/outline"
 const route = useRoute()
 
-const serviceStore = useServiceStore()
+const store = usePaymentMethodStore()
 const page = ref(1)
 const pageSize = ref(10)
 const isLoading =  ref(false)
 const actionType =  ref("add")
 
-const services = computed(() => serviceStore.services)
+const methods = computed(() => store.methods)
 const form = ref({
-  service: "",
-  price: "",
-  description: ""
+  method: "",
+  details: ""
 })
 const formattedPrice = ref()
 const { showNotification } =  useUtilities()
 
 onMounted(() => {
-  serviceStore.fetch()
+  store.fetch()
 })
 
 const reset = () => {
   form.value =  {
-    service: "",
-    price: "",
-    description: ""
+    method: "",
+    details: ""
   }
 }
 
-const response =  computed(() => serviceStore.response);
-const error =  computed(() => serviceStore.errResponse);
+const response =  computed(() => store.response);
+const error =  computed(() => store.errResponse);
 
 watch(response, (value) => {
   if(value !== null){
     isLoading.value =  false;
     switch (actionType.value){
       case 'add':
-        showNotification("Success","Service Added Successfully", "success")
+        showNotification("Success","Payment Method Added Successfully", "success")
         reset()
         break;
       case 'remove':
-        showNotification("Success","Service Removed Successfully", "success")
+        showNotification("Success","Payment Method Removed Successfully", "success")
         reset()
         break;
     }
-    serviceStore.fetch()
+    store.fetch()
   }
 })
 
 watch(error, (value) => {
   if(value !== null){
     isLoading.value =  false;
-    showNotification("Error","Service not added, Contact Support", "error")
+    showNotification("Error","Payment Method not added, Contact Support", "error")
     reset()
   }
 })
@@ -73,25 +71,19 @@ const submit =  () => {
   isLoading.value =  true;
   actionType.value = "add";
 
-  if(form.value.service === ""){
-    showNotification("Invalid Service","please insert a service", "error")
+  if(form.value.method === ""){
+    showNotification("Invalid Payment Method","please insert a payment method", "error")
     isLoading.value =  false;
     return;
   }
 
-  if(form.value.price === ""){
-    showNotification("Invalid Amount","please insert a plan amount", "error")
-    isLoading.value =  false;
-    return;
-  }
-
-  serviceStore.save(form.value)
+  store.save(form.value)
 
 }
 
-const removeService =  (id) => {
+const removeMethod =  (id) => {
   actionType.value = "remove";
-  serviceStore.remove(id);
+  store.remove(id);
 }
 </script>
 
@@ -113,31 +105,31 @@ const removeService =  (id) => {
               background-even
               :headers="[
                 { label:'Id', key:'id' },
-                { label:'Service', key:'service' },
-                { label: 'Price', key:'price'},
+                { label:'Method', key:'method' },
+                { label: 'Details', key:'details'},
                 { label: 'Sales', key:'sales'},
                 { label: 'Created', key:'createdAt' },
                 { label: 'Action'},
                 ]">
-            <MazTableRow v-if="services.length !== 0"  v-for="service in services" :key="service.id">
+            <MazTableRow v-if="methods.length !== 0"  v-for="method in methods" :key="method.id">
               <MazTableCell>
-                {{ service.id }}
+                {{ method.id }}
               </MazTableCell>
               <MazTableCell>
-                {{ service.service }}
+                {{ method.method }}
               </MazTableCell>
 
-              <MazTableCell class="flex gap-2">
-                {{ number(service.price,'en-UG') }} UGX
+              <MazTableCell class="flex gap-2 lowercase text-xs">
+                {{ method.details }}
               </MazTableCell>
               <MazTableCell >
-                {{ service.sales.length }}
+                {{ method.sales.length }}
               </MazTableCell>
               <MazTableCell>
-                {{ dateFormat(service.createdAt, "dS mmmm , yyyy") }}
+                {{ dateFormat(method.createdAt, "dS mmmm , yyyy") }}
               </MazTableCell>
               <MazTableCell class="flex flex-row gap-2">
-                <button @click="removeService(service.id)" class="bg-red-800 p-2 text-white rounded-full" title="approve">
+                <button @click="removeMethod(method.id)" class="bg-red-800 p-2 text-white rounded-full" title="approve">
                   <TrashIcon class="w-4 h-4" />
                 </button>
               </MazTableCell>
@@ -146,28 +138,16 @@ const removeService =  (id) => {
         </div>
       </div>
       <div class="w-full lg:w-2/6 h-fit  flex flex-col bg-white rounded-sm shadow">
-        <span class=" font-medium p-4 uppercase">Add Service</span>
+        <span class=" font-medium p-4 uppercase">Add Payment Method</span>
         <div class="border "></div>
         <div class="w-full p-4 flex flex-col">
           <div class="mb-4 flex flex-col gap-1">
-            <span class="font-medium capitalize">Service</span>
-            <input v-model="form.service"  type="text" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none">
+            <span class="font-medium capitalize">Payment Method</span>
+            <input v-model="form.method"  type="text" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none">
           </div>
           <div class="mb-4 flex flex-col gap-1">
-            <span class="font-medium capitalize">Amount</span>
-            <MazInputPrice
-                v-model="form.price"
-                label="Enter Amount"
-                currency="UGX"
-                locale="en-US"
-                :min="500"
-                :max="1000000"
-                @formatted="formattedPrice = $event"
-            />
-          </div>
-          <div class="mb-4 flex flex-col gap-1">
-            <span class="font-medium capitalize p-2">Description</span>
-            <textarea v-model="form.description" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none"></textarea>
+            <span class="font-medium capitalize p-2">Details</span>
+            <textarea v-model="form.details" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none"></textarea>
           </div>
 
           <button @click="submit" class="bg-indigo-950 text-white mt-4  w-full py-3 rounded-md shadow-md capitalize justify-center font-bold items-center flex gap-2 "> <MazSpinner v-if="isLoading" size="1.5em"  color="white" /> <span class="text-white uppercase">Submit</span></button>

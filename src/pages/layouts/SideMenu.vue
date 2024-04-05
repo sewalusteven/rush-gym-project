@@ -29,13 +29,16 @@ const getActiveTab = () => {
     activeTab.value = 'dashboard'
   }
 
-  if (path.includes('services') || path.includes('plans') ) {
+  if (path.includes('services') || path.includes('plans')  || path.includes('payment-methods') ) {
    activeTab.value ='settings'
     if (path.includes('services')) {
       activeSubMenuItem.value = `services`
     }
     if (path.includes('plans')) {
       activeSubMenuItem.value = `plans`
+    }
+    if (path.includes('payment-methods')) {
+      activeSubMenuItem.value = `methods`
     }
   }
 
@@ -50,6 +53,7 @@ const getActiveTab = () => {
   if (path.includes('sales')) {
     activeTab.value = 'sales'
   }
+
 }
 
 watch(route, () => {
@@ -128,6 +132,10 @@ onMounted(() => {
           <RouterLink to="/admin/plans" :class="`${activeSubMenuItem === 'plans' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
             <span class="text-2xl block float-left"><UsersIcon class="w-5 h-5"/></span>
             <span :class="`${isMinified && 'hidden'}`">Memberships</span>
+          </RouterLink>
+          <RouterLink to="/admin/payment-methods" :class="`${activeSubMenuItem === 'methods' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+            <span class="text-2xl block float-left"><BanknotesIcon class="w-5 h-5"/></span>
+            <span :class="`${isMinified && 'hidden'}`">Payment Methods</span>
           </RouterLink>
         </div>
 

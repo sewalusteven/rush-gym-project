@@ -8,6 +8,7 @@ import Sales from "@/pages/portal/Sales.vue";
 import Reports from "@/pages/portal/Reports.vue";
 import Services from "@/pages/portal/settings/Services.vue";
 import MembershipPlans from "@/pages/portal/settings/MembershipPlans.vue";
+import PaymentMethods from "@/pages/portal/settings/PaymentMethods.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,6 +62,11 @@ const router = createRouter({
           path: "plans",
           name: "plans",
           component: MembershipPlans
+        },
+        {
+          path: "payment-methods",
+          name: "payment methods",
+          component: PaymentMethods
         },
       ]
     }

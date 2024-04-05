@@ -15,7 +15,7 @@
     "dateformat": "^5.0.3",
     "dayjs": "^1.11.10",
     "libphonenumber-js": "^1.10.56",
-    "maz-ui": "^3.32.2",
+    "maz-ui": "^3.36.2",
     "notiwind": "^2.0.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
