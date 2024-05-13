@@ -4,11 +4,12 @@ import Login from "@/pages/auth/Login.vue";
 import MainLayout from "@/layout/MainLayout.vue";
 import Dashboard from "@/pages/portal/Dashboard.vue";
 import Members from "@/pages/portal/Members.vue";
-import Sales from "@/pages/portal/Sales.vue";
 import Reports from "@/pages/portal/Reports.vue";
 import Services from "@/pages/portal/settings/Services.vue";
 import MembershipPlans from "@/pages/portal/settings/MembershipPlans.vue";
 import PaymentMethods from "@/pages/portal/settings/PaymentMethods.vue";
+import {useAuthStore} from "@/stores/auth.js";
+import Transactions from "@/pages/portal/Transactions.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,14 @@ const router = createRouter({
     {
       path: "/auth",
       component: AuthLayout,
+      beforeEnter: (to, from, next) => {
+        const accessToken =  localStorage.getItem('token')
+        if(accessToken){
+          next("/admin")
+        }else {
+          next();
+        }
+      },
       children:[
         {
           path:"",
@@ -32,6 +41,9 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component:MainLayout,
+      meta: {
+        requiresAuth: true,
+      },
       children: [
         {
           path: "",
@@ -44,9 +56,9 @@ const router = createRouter({
           component: Members
         },
         {
-          path: "sales",
-          name: "sales",
-          component: Sales
+          path: "transactions",
+          name: "transactions",
+          component: Transactions
         },
         {
           path: "reports",
@@ -73,5 +85,25 @@ const router = createRouter({
     
   ]
 })
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  const token =  localStorage.getItem('token')
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!token) {
+      authStore.returnUrl = to.fullPath;
+      next('/auth');
+    } else {
+      try {
+        next();
+      } catch (error) {
+        next('/auth'); // Redirect to login if refresh fails
+      }
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

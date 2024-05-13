@@ -13,7 +13,8 @@ import {
   UserIcon, XMarkIcon, PlusCircleIcon
 } from "@heroicons/vue/24/outline";
 import {onMounted, ref, watch} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {useAuthStore} from "@/stores/auth.js";
 
 const isMinified =  ref(false)
 const isPhoneOpen =  ref(false)
@@ -22,6 +23,7 @@ const activeTab =  ref('dashboard')
 const activeSubMenuItem =  ref('')
 const route =  useRoute()
 const toggle =  ref(false)
+const authStore =  useAuthStore()
 
 const getActiveTab = () => {
   let path = route.path;
@@ -50,8 +52,8 @@ const getActiveTab = () => {
     activeTab.value = 'reports'
   }
 
-  if (path.includes('sales')) {
-    activeTab.value = 'sales'
+  if (path.includes('transactions')) {
+    activeTab.value = 'transactions'
   }
 
 }
@@ -59,6 +61,11 @@ const getActiveTab = () => {
 watch(route, () => {
   getActiveTab()
 })
+const router =  useRouter()
+
+const logout = () => {
+  authStore.logout()
+}
 
 onMounted(() => {
   getActiveTab()
@@ -97,26 +104,26 @@ onMounted(() => {
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Members</span>
         </RouterLink>
 
-        <RouterLink to="/admin/sales" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'sales' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin/transactions" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'transactions' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
          <BanknotesIcon class="w-5 h-5 "/>
         </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Sales</span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Transactions</span>
         </RouterLink>
 
-        <RouterLink to="/admin/reports" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'reports' && 'font-bold text-white bg-indigo-500'}`">
-        <span class="text-2xl block float-left">
-         <ChartBarIcon class="w-5 h-5 "/>
-        </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Reports</span>
-        </RouterLink>
+<!--        <RouterLink to="/admin/reports" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'reports' && 'font-bold text-white bg-indigo-500'}`">-->
+<!--        <span class="text-2xl block float-left">-->
+<!--         <ChartBarIcon class="w-5 h-5 "/>-->
+<!--        </span>-->
+<!--          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Reports</span>-->
+<!--        </RouterLink>-->
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'notifications' && 'font-bold text-white bg-indigo-500'}`">
-        <span class="text-2xl block float-left">
-         <EnvelopeIcon class="w-5 h-5 "/>
-        </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Notifications</span>
-        </div>
+<!--        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'notifications' && 'font-bold text-white bg-indigo-500'}`">-->
+<!--        <span class="text-2xl block float-left">-->
+<!--         <EnvelopeIcon class="w-5 h-5 "/>-->
+<!--        </span>-->
+<!--          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Notifications</span>-->
+<!--        </div>-->
 
 
         <div :class="`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold rounded-md mt-2 ${activeTab === 'settings' && 'text-white font-bold bg-indigo-500'}`" @click="toggle = !toggle">
@@ -139,18 +146,18 @@ onMounted(() => {
           </RouterLink>
         </div>
 
-        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'profile' && 'font-bold text-white bg-indigo-500'}`">
-        <span class="text-2xl block float-left">
-         <UserIcon class="w-5 h-5 "/>
-        </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Profile</span>
-        </div>
+<!--        <div :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'profile' && 'font-bold text-white bg-indigo-500'}`">-->
+<!--        <span class="text-2xl block float-left">-->
+<!--         <UserIcon class="w-5 h-5 "/>-->
+<!--        </span>-->
+<!--          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Profile</span>-->
+<!--        </div>-->
 
       </div>
     </div>
-    <div :class="`text-gray-300 ${isMinified && 'justify-center'} ${!isPhoneOpen && 'hidden lg:block'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 font-bold  bg-purple-700`">
+    <div @click="logout" :class="`text-gray-300 ${isMinified && 'justify-center'} ${!isPhoneOpen && 'hidden lg:block'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 font-bold  bg-purple-700`">
         <span class="text-2xl block float-left">
-         <PowerIcon class="w-5 h-5 "/>
+         <PowerIcon class="w-5 h-5 mr-2 "/>
         </span>
       <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Logout</span>
     </div>

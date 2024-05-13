@@ -8,6 +8,13 @@ export const usePaymentMethodStore = defineStore('payment-method-store', {
         errResponse: null,
         response: null
     }),
+    getters: {
+        methodItems: state => {
+            let items =  [{label: 'Select Payment Method', value: ''}]
+            state.methods.forEach(m => { items.push({ label: m.method, value : m.id} ) })
+            return items
+        }
+    },
     actions: {
          fetch(){
            client.get('/payment-methods').then(response => {

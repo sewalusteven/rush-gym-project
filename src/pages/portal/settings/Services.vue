@@ -64,8 +64,17 @@ watch(response, (value) => {
 watch(error, (value) => {
   if(value !== null){
     isLoading.value =  false;
-    showNotification("Error","Service not added, Contact Support", "error")
-    reset()
+    switch (actionType.value){
+      case 'add':
+        showNotification("Error","Service not added, Contact Support", "error")
+        reset()
+        break;
+      case 'remove':
+        showNotification("Error","Service not removed, Contact Support", "error")
+        reset()
+        break;
+    }
+
   }
 })
 

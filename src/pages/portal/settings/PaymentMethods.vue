@@ -62,8 +62,17 @@ watch(response, (value) => {
 watch(error, (value) => {
   if(value !== null){
     isLoading.value =  false;
-    showNotification("Error","Payment Method not added, Contact Support", "error")
-    reset()
+    switch (actionType.value){
+      case 'add':
+        showNotification("Error","Payment Method not added, Contact Support", "error")
+        reset()
+        break;
+      case 'remove':
+        showNotification("Error","Payment Method not removed, Contact Support", "error")
+        reset()
+        break;
+    }
+
   }
 })
 

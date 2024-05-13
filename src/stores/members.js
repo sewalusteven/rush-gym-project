@@ -8,6 +8,13 @@ export const useMemberStore = defineStore('member-store', {
         errResponse: null,
         response: null
     }),
+    getters: {
+        memberItems: state => {
+            let items =  [{label: 'Select Member', value: ''}]
+            state.members.forEach(m => { items.push({ label: m.name, value : m.id} ) })
+            return items;
+        }
+    },
     actions: {
          fetchMembers(){
            client.get('/members').then(response => {
