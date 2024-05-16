@@ -5,13 +5,20 @@ import {client} from "@/customAxios.js";
 export const useExpenseStore = defineStore('expense-store', {
     state: () => ({
         expenses: [],
+        expensesData: null,
         errResponse: null,
         response: null
     }),
     actions: {
-         fetch(){
-           client.get('/expenses').then(response => {
+         fetch(page, limit, search = ""){
+             let url =  `/expenses?perPage=${limit}&page=${page}`;
+             if(search !== ""){
+                 url = `/expenses?perPage=${limit}&page=${page}&search=${search}`
+             }
+
+           client.get(url).then(response => {
                this.expenses = response.data.data
+               this.expensesData = response.data
            }).catch(err => {
                this.errResponse =  err.response
            })

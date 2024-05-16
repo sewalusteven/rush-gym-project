@@ -9,39 +9,42 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useTransactionStore} from "@/stores/transactions.js";
 import {EyeIcon} from "@heroicons/vue/24/outline/index.js";
 import {number} from "maz-ui";
+import {useSaleStore} from "@/stores/sales.js";
+import {useExpenseStore} from "@/stores/expenses.js";
 const page = ref(1)
 const pageSize = ref(10)
 const totalPages = ref(1)
 const searchQuery = ref("")
-const transactionStore = useTransactionStore()
+const store = useExpenseStore()
 
-const transactions = ref([])
-const transactionsData = computed(() => transactionStore.transactionsData)
+const expenses = ref([])
+const expensesData = computed(() => store.expensesData)
 
-watch(transactionsData, (value) => {
+watch(expensesData, (value) => {
   if(value !== null){
-    transactions.value = value.data
+
+    expenses.value = value.data
     totalPages.value = value.meta.last_page
   }
 })
 
 watch(searchQuery, (qry) => {
-  transactionStore.fetch(page.value, pageSize.value, qry)
+  store.fetch(page.value, pageSize.value, qry)
 })
 
 watch(page, function (value) {
-  transactionStore.fetch(value, pageSize.value)
+  store.fetch(value, pageSize.value)
 })
 
 
 onMounted(() => {
-  transactionStore.fetch(page.value, pageSize.value)
+  store.fetch(page.value, pageSize.value)
 })
 </script>
 
 <template>
   <div class="w-full p-4 flex flex-col gap-3">
-    <MazTable v-show="transactionsData"
+    <MazTable v-show="expensesData"
               size="sm"
               color="primary"
               hoverable
@@ -51,36 +54,37 @@ onMounted(() => {
               no-search-by
               :headers="[
                 { label:'Ref.' },
-                { label: 'Narration'},
+               { label: 'Narration' },
                 { label: 'Amount' },
-                { label: 'Type' },
+                { label: 'User' },
                 { label: 'Created At'}
                 ]">
-      <MazTableRow  v-for="transaction in transactions" :key="transaction.id.toString()">
+      <MazTableRow  v-for="expense in expenses" :key="expense.id">
         <MazTableCell>
-          {{ transaction.id }}
+          {{ expense.transaction.id }}
         </MazTableCell>
         <MazTableCell>
-          {{ transaction.narration }}
+          {{ expense.narration }}
         </MazTableCell>
         <MazTableCell class="flex gap-2">
-          {{ number(transaction.amount ,'en-UG') }} UGX
+          {{ number(expense.amount ,'en-UG') }} UGX
         </MazTableCell>
         <MazTableCell>
-          <span :class="transaction.type === 'credit'? 'bg-blue-50 rounded text-blue-700 border-blue-600': 'bg-red-50 rounded text-red-700 border-red-600' " class="text-center p-1 text-xs  border uppercase">{{ transaction.type}}</span>
+          {{ expense.user ? expense.user.name : 'UNKNOWN' }}
         </MazTableCell>
 
         <MazTableCell>
-          {{ dateFormat(transaction.createdAt.toString(), "dS mmmm , yyyy") }}
+          {{ dateFormat(expense.createdAt.toString(), "dS mmmm , yyyy") }}
         </MazTableCell>
+
 
       </MazTableRow>
     </MazTable>
     <div class="flex flex-row justify-between mt-3">
-      <div v-if="transactionsData" class="flex flex-row gap-2 text-xs">
-        <span class="font-medium">{{ transactions.length }} of {{ transactionsData.meta.total }} Transactions</span>
+      <div v-if="expensesData" class="flex flex-row gap-2 text-xs">
+        <span class="font-medium">{{ expenses.length }} of {{ expensesData.meta.total }} Expenses</span>
       </div>
-      <MazPagination size="sm" v-if="transactionsData" :results-size="pageSize" :total-pages="totalPages" active-color="primary" v-model="page" />
+      <MazPagination size="sm" v-if="expensesData" :results-size="pageSize" :total-pages="totalPages" active-color="primary" v-model="page" />
     </div>
 
   </div>

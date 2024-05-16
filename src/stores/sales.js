@@ -5,13 +5,20 @@ import {client} from "@/customAxios.js";
 export const useSaleStore = defineStore('sales-store', {
     state: () => ({
         sales: [],
+        salesData: null,
         errResponse: null,
         response: null
     }),
     actions: {
-         fetch(){
-           client.get('/sales').then(response => {
+         fetch(page, limit, search = ""){
+             let url =  `/sales?perPage=${limit}&page=${page}`;
+             if(search !== ""){
+                 url = `/sales?perPage=${limit}&page=${page}&search=${search}`
+             }
+
+           client.get(url).then(response => {
                this.sales = response.data.data
+               this.salesData =  response.data
            }).catch(err => {
                this.errResponse =  err.response
            })

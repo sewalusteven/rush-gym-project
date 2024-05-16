@@ -10,6 +10,8 @@ import MembershipPlans from "@/pages/portal/settings/MembershipPlans.vue";
 import PaymentMethods from "@/pages/portal/settings/PaymentMethods.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import Transactions from "@/pages/portal/Transactions.vue";
+import Sales from "@/pages/portal/Sales.vue";
+import Expenses from "@/pages/portal/Expenses.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,6 +61,16 @@ const router = createRouter({
           path: "transactions",
           name: "transactions",
           component: Transactions
+        },
+        {
+          path: "sales",
+          name: "sales",
+          component: Sales
+        },
+        {
+          path: "expenses",
+          name: "expenses",
+          component: Expenses
         },
         {
           path: "reports",
