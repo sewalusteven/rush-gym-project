@@ -64,7 +64,11 @@ const submit =  () => {
     return;
   }
 
-  store.changePassword(form);
+  store.changePassword({
+    password: form.password,
+    password_confirmation: form.confirmPassword,
+    oldPassword: form.oldPassword
+  });
 }
 
 </script>
