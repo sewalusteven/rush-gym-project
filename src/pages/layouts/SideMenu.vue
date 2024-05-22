@@ -5,7 +5,7 @@ import {
   CurrencyDollarIcon,
   QueueListIcon,
   CreditCardIcon,
-  ChartBarIcon,
+  UserGroupIcon,
     UsersIcon,
   EnvelopeIcon,
   BanknotesIcon,
@@ -31,7 +31,7 @@ const getActiveTab = () => {
     activeTab.value = 'dashboard'
   }
 
-  if (path.includes('services') || path.includes('plans')  || path.includes('payment-methods') ) {
+  if (path.includes('services') || path.includes('plans')  || path.includes('payment-methods') || path.includes('users') ) {
    activeTab.value ='settings'
     if (path.includes('services')) {
       activeSubMenuItem.value = `services`
@@ -41,6 +41,9 @@ const getActiveTab = () => {
     }
     if (path.includes('payment-methods')) {
       activeSubMenuItem.value = `methods`
+    }
+    if (path.includes('users')) {
+      activeSubMenuItem.value = `users`
     }
   }
 
@@ -62,6 +65,12 @@ const getActiveTab = () => {
 
   if (path.includes('expenses')) {
     activeTab.value = 'expenses'
+  }
+
+
+  if (path.includes('account')) {
+    activeTab.value = ''
+    activeSubMenuItem.value = ''
   }
 
 }
@@ -94,39 +103,40 @@ onMounted(() => {
 
 
     <div id="top-menu" class="text-white flex flex-col">
-      <span :class="`font-bold text-xl uppercase ${isMinified && 'hidden'}`">Rush Gym Panel</span>
+      <span :class="`font-bold hover:rotate-[360deg] duration-300 text-lg uppercase hidden lg:block ${isMinified && 'hidden'}`"><img src="/logo.png" alt="logo" width="200" height="200"></span>
+      <span :class="`font-bold hover:rotate-[360deg] duration-300 text-lg uppercase lg:hidden`">Rush Fitness Center</span>
 
       <div :class="`pt-2 mt-9 duration-300 ${!isPhoneOpen && 'hidden lg:block'}`">
 
         <RouterLink to="/admin" :class="`text-gray-300 ${isMinified && 'justify-center'} duration-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'dashboard' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <HomeIcon class="w-5 h-5 "/>
+         <HomeIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
           <span :class="`text-base flex-1 duration-200 ${isMinified && 'hidden'}`">Dashboard</span>
         </RouterLink>
 
         <RouterLink to="/admin/members" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'members' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <UsersIcon class="w-5 h-5 "/>
+         <UsersIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Members</span>
         </RouterLink>
 
         <RouterLink to="/admin/transactions" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'transactions' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <BanknotesIcon class="w-5 h-5 "/>
+         <BanknotesIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Transactions</span>
         </RouterLink>
         <RouterLink to="/admin/sales" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'sales' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <CurrencyDollarIcon class="w-5 h-5 "/>
+         <CurrencyDollarIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Sales</span>
         </RouterLink>
         <RouterLink to="/admin/expenses" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'expenses' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <CreditCardIcon class="w-5 h-5 "/>
+         <CreditCardIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Expenses</span>
         </RouterLink>
@@ -153,16 +163,20 @@ onMounted(() => {
         </div>
         <div v-show="toggle">
           <RouterLink to="/admin/services" :class="`${activeSubMenuItem === 'services' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
-            <span class="text-2xl block float-left"><QueueListIcon class="w-5 h-5"/></span>
+            <span class="text-2xl block float-left"><QueueListIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
             <span :class="`${isMinified && 'hidden'}`">Services</span>
           </RouterLink>
           <RouterLink to="/admin/plans" :class="`${activeSubMenuItem === 'plans' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
-            <span class="text-2xl block float-left"><UsersIcon class="w-5 h-5"/></span>
+            <span class="text-2xl block float-left"><UsersIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
             <span :class="`${isMinified && 'hidden'}`">Memberships</span>
           </RouterLink>
           <RouterLink to="/admin/payment-methods" :class="`${activeSubMenuItem === 'methods' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
-            <span class="text-2xl block float-left"><BanknotesIcon class="w-5 h-5"/></span>
+            <span class="text-2xl block float-left"><BanknotesIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
             <span :class="`${isMinified && 'hidden'}`">Payment Methods</span>
+          </RouterLink>
+          <RouterLink to="/admin/users" :class="`${activeSubMenuItem === 'users' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+            <span class="text-2xl block float-left"><UserGroupIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
+            <span :class="`${isMinified && 'hidden'}`">User Management</span>
           </RouterLink>
         </div>
 
@@ -177,7 +191,7 @@ onMounted(() => {
     </div>
     <div @click="logout" :class="`text-gray-300 ${isMinified && 'justify-center'} ${!isPhoneOpen && 'hidden lg:block'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 font-bold  bg-purple-700`">
         <span class="text-2xl block float-left">
-         <PowerIcon class="w-5 h-5 mr-2 "/>
+         <PowerIcon class="w-5 h-5 mr-2 hover:rotate-[360deg] duration-300"/>
         </span>
       <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Logout</span>
     </div>

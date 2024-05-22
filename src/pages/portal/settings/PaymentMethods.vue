@@ -7,9 +7,7 @@ import MazTableCell from "maz-ui/components/MazTableCell";
 import MazTable from "maz-ui/components/MazTable";
 import MazTableRow from "maz-ui/components/MazTableRow";
 import MazSpinner from "maz-ui/components/MazSpinner";
-import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import dateFormat from "dateformat";
-import {number} from "maz-ui";
 import {useUtilities} from "@/composables/useUtilities";
 import { TrashIcon } from "@heroicons/vue/24/outline"
 const route = useRoute()

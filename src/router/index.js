@@ -12,6 +12,8 @@ import {useAuthStore} from "@/stores/auth.js";
 import Transactions from "@/pages/portal/Transactions.vue";
 import Sales from "@/pages/portal/Sales.vue";
 import Expenses from "@/pages/portal/Expenses.vue";
+import Users from "@/pages/portal/settings/Users.vue";
+import Account from "@/pages/portal/settings/Account.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,6 +83,16 @@ const router = createRouter({
           path: "services",
           name: "services",
           component: Services
+        },
+        {
+          path: "users",
+          name: "users",
+          component: Users
+        },
+        {
+          path: "account",
+          name: "account",
+          component: Account
         },
         {
           path: "plans",

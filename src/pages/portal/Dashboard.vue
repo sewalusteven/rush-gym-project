@@ -102,7 +102,7 @@ onMounted(() => {
 <template>
 <div class="container-md p-2 mx-auto flex flex-col gap-4">
   <span class="uppercase font-bold">Dashboard</span>
-  <div class="grid grid-cols-4 gap-4">
+  <div class="grid lg:grid-cols-4 gap-4">
     <StatCard title="No. Transactions Today" :stat="transactionsToday" :icon="CurrencyDollarIcon" from="from-indigo-950" to="to-gray-800" />
     <StatCard title="Sales Today" :stat="`${salesValueToday} UGX`" :icon="BanknotesIcon" from="from-red-950" to="to-gray-800" />
     <StatCard title="New Members" :stat="membersThisMonth" :icon="UsersIcon" from="from-yellow-950" to="to-gray-800" />
