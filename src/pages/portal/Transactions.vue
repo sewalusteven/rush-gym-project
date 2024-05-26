@@ -16,6 +16,15 @@ const closeDialog = () => {
   expenseDialogOpen.value = false
 }
 
+const openDialog = () => {
+  dialogOpen.value = true
+}
+
+
+const openExpenseDialog = () => {
+  expenseDialogOpen.value = true
+}
+
 </script>
 
 <template>
@@ -28,11 +37,11 @@ const closeDialog = () => {
       <div id="head" class="flex flex-row items-center justify-between py-4 px-5">
         <span class=" font-medium uppercase">{{ route.name }}</span>
         <div class="flex flex-row gap-2">
-          <button @click="dialogOpen = !dialogOpen" class="bg-blue-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
+          <button @click="openDialog" class="bg-blue-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
             <span class="uppercase text-sm font-bold">Add Sale</span>
             <PlusIcon class="w-5 h-5" />
           </button>
-          <button @click="expenseDialogOpen = !expenseDialogOpen"  class="bg-red-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
+          <button @click="openExpenseDialog"  class="bg-red-950 text-white p-2 px-3 shadow rounded-lg flex flex-row items-center gap-2 ">
             <span class="uppercase text-sm font-bold">Add Expense</span>
             <MinusIcon class="w-5 h-5" />
           </button>

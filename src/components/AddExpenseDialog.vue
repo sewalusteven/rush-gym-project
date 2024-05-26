@@ -18,6 +18,10 @@ const props =  defineProps({
   }
 })
 
+const closeDialog = () => {
+  emit("closeDialog");
+}
+
 
 const form =  ref({
   amount:0,
@@ -78,7 +82,7 @@ const formattedPrice = ref()
       <DialogPanel class="w-1/2 mx-auto rounded bg-white p-4">
         <DialogTitle class="pb-3 border-b mb-3 flex justify-between">
           <span class="font-bold">Add Expense</span>
-          <XMarkIcon class="w-5 h-5 cursor-pointer" @click="dialogOpen = false" />
+          <XMarkIcon class="w-5 h-5 cursor-pointer" @click="closeDialog" />
         </DialogTitle>
 
         <div class="p-2 mt-4 w-full flex flex-col gap-2">

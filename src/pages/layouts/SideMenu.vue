@@ -12,7 +12,7 @@ import {
   PowerIcon,
   UserIcon, XMarkIcon, PlusCircleIcon
 } from "@heroicons/vue/24/outline";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/stores/auth.js";
 
@@ -83,6 +83,13 @@ const router =  useRouter()
 const logout = () => {
   authStore.logout()
 }
+
+const parseSessionUser = () => {
+  const user = localStorage.getItem('user');
+  return user !== null ? JSON.parse(user) : null;
+}
+
+const user = computed(parseSessionUser);
 
 onMounted(() => {
   getActiveTab()
@@ -174,7 +181,7 @@ onMounted(() => {
             <span class="text-2xl block float-left"><BanknotesIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
             <span :class="`${isMinified && 'hidden'}`">Payment Methods</span>
           </RouterLink>
-          <RouterLink to="/admin/users" :class="`${activeSubMenuItem === 'users' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
+          <RouterLink to="/admin/users" v-if="user.role === 'admin'" :class="`${activeSubMenuItem === 'users' && 'text-white font-bold'} text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 px-5 hover:font-bold hover:text-white rounded-md`">
             <span class="text-2xl block float-left"><UserGroupIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/></span>
             <span :class="`${isMinified && 'hidden'}`">User Management</span>
           </RouterLink>

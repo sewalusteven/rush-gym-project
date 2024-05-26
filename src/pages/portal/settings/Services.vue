@@ -169,8 +169,8 @@ const removeService =  (id) => {
                 label="Enter Amount"
                 currency="UGX"
                 locale="en-US"
-                :min="500"
-                :max="1000000"
+                :min="0"
+                :max="1000000000"
                 @formatted="formattedPrice = $event"
             />
           </div>

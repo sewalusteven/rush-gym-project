@@ -53,9 +53,6 @@ onMounted(() => {
     </template>
     <template #actions="{ row }" >
       <div class="flex flex-row gap-1">
-        <button class="bg-green-800 p-2 text-white rounded-full" title="Register Sale">
-          <CurrencyDollarIcon class="w-4 h-4 " />
-        </button>
         <button class="bg-yellow-800 p-2 text-white rounded-full" title="Renew Membership">
           <ArrowPathIcon class="w-4 h-4 " />
         </button>

@@ -47,16 +47,8 @@ const error =  computed(() => planStore.errResponse);
 watch(response, (value) => {
   if(value !== null){
     isLoading.value =  false;
-    switch (actionType.value){
-      case 'add':
-        showNotification("Success","Plan Added Successfully", "success")
-        reset()
-          break;
-      case 'remove':
-        showNotification("Success","Plan Removed Successfully", "success")
-        reset()
-          break;
-    }
+    showNotification("Success",value.message, "success")
+    reset()
     planStore.fetchPlans()
   }
 })
@@ -64,16 +56,8 @@ watch(response, (value) => {
 watch(error, (value) => {
   if(value !== null){
     isLoading.value =  false;
-    switch (actionType.value){
-      case 'add':
-        showNotification("Error","Plan not added, Contact Support", "error")
-        reset()
-        break;
-      case 'remove':
-        showNotification("Error","Plan not removed, Contact Support", "error")
-        reset()
-        break;
-    }
+    showNotification("Error",value.message, "error")
+    reset()
 
   }
 })
@@ -122,6 +106,7 @@ const removePlan =  (id) => {
               background-even
               :headers="[
                 { label:'Id', key:'id' },
+                { label:'Plan', key:'name' },
                 { label:'Duration', key:'duration' },
                 { label: 'Price', key:'price'},
                 { label: 'Members', key:'members'},
@@ -131,6 +116,9 @@ const removePlan =  (id) => {
             <MazTableRow v-if="plans.length !== 0"  v-for="plan in plans" :key="plan.id">
               <MazTableCell>
                 {{ plan.id }}
+              </MazTableCell>
+              <MazTableCell>
+                {{ plan.name }}
               </MazTableCell>
               <MazTableCell>
                 <span class="text-center p-1 text-xs bg-blue-50 rounded text-blue-700 border border-blue-600">{{ plan.duration.split("_").join(" ") }}</span>
@@ -168,8 +156,8 @@ const removePlan =  (id) => {
                 label="Enter Amount"
                 currency="UGX"
                 locale="en-US"
-                :min="500"
-                :max="1000000"
+                :min="0"
+                :max="1000000000"
                 @formatted="formattedPrice = $event"
             />
           </div>
@@ -184,6 +172,9 @@ const removePlan =  (id) => {
               </span>
               <span class="capitalize text-gray-500">
                 <input type="radio" class="w-5 h-5" value="monthly" v-model="form.duration"> <span class="capitalize">Monthly</span>
+              </span>
+              <span class="capitalize text-gray-500">
+                <input type="radio" class="w-5 h-5" value="biannually" v-model="form.duration"> <span class="capitalize">BiAnnually</span>
               </span>
               <span class="capitalize text-gray-500">
                 <input type="radio" class="w-5 h-5" value="yearly" v-model="form.duration"> <span class="capitalize">Yearly</span>
