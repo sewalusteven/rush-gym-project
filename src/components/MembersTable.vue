@@ -12,9 +12,23 @@ const memberStore = useMemberStore()
 
 const members = computed(() => memberStore.members)
 
+const emits = defineEmits(['openDeleteModal', 'openEditModal', 'openAddPlanModal'])
+
 onMounted(() => {
   memberStore.fetchMembers()
 })
+
+function totalAmount (sales) {
+  return sales.reduce((sum, obj) => {
+    const amount = parseFloat(obj.amount); //Parse each string to a floating point number
+    if (!isNaN(amount)) { //Check if the parsing succeeded.
+      return sum + amount;
+    } else {
+      return sum; //Skip the invalid number
+    }
+
+  }, 0)
+}
 </script>
 
 <template>
@@ -30,36 +44,37 @@ onMounted(() => {
       background-even
       :rows="members"
       :headers="[
-                { label:'No', key:'id'},
                 { label: 'Full Name', key:'name' },
                 { label: 'Email', key:'email'},
                 { label: 'Phone', key: 'phone'},
-                { label: 'Start Date', key:'start' },
-                { label: 'Renew Date', key:'end' },
-                { label: 'Plan', key:'membershipPlan' },
+                { label: 'Sales', key: 'sales'},
                 { label: 'Created on', key:'createdAt' },
                 ]">
-    <template #cell-start="{ value }">
-      {{dateFormat(value, "dS mmmm , yyyy")}}
+
+    <template #cell-email="{ value }">
+      {{value ? value : 'N/A'}}
     </template>
-    <template #cell-end="{ value }">
-      {{dateFormat(value, "dS mmmm , yyyy")}}
+    <template #cell-phone="{ value }">
+      {{value ? value : 'N/A'}}
     </template>
-    <template #cell-membershipPlan="{ value }">
-      <span class="uppercase">{{ value.name }}</span>
+    <template #cell-sales="{ value }">
+      <span class="flex flex-col gap-1">
+        <span> {{ value.length ?? 0 }}</span>
+        <span class="text-xs">{{ totalAmount(value) }} UGX</span>
+      </span>
     </template>
     <template #cell-createdAt="{ value }">
       {{dateFormat(value, "dS mmmm , yyyy")}}
     </template>
     <template #actions="{ row }" >
       <div class="flex flex-row gap-1">
-        <button class="bg-yellow-800 p-2 text-white rounded-full" title="Renew Membership">
+        <button @click="() => emits('openAddPlanModal', row)" class="bg-yellow-800 p-2 text-white rounded-full" title="Add to Plan">
           <ArrowPathIcon class="w-4 h-4 " />
         </button>
-        <button class="bg-blue-800 p-2 text-white rounded-full" title="Edit">
+        <button @click="() => emits('openEditModal', row)" class="bg-blue-800 p-2 text-white rounded-full" title="Edit">
           <PencilIcon class="w-4 h-4 " />
         </button>
-        <button class="bg-red-800 p-2 text-white rounded-full" title="Remove Member">
+        <button @click="() => emits('openDeleteModal', row)" class="bg-red-800 p-2 text-white rounded-full" title="Remove Member">
           <TrashIcon class="w-4 h-4 " />
         </button>
       </div>

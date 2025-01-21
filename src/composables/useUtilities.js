@@ -18,7 +18,7 @@ export function useUtilities() {
             title: title,
             status:status,
             text: text
-        }, 10000) // 4s
+        }, 3000) // 4s
     }
 
     const getCurrentDate = () => {

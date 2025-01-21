@@ -14,6 +14,7 @@ import Sales from "@/pages/portal/Sales.vue";
 import Expenses from "@/pages/portal/Expenses.vue";
 import Users from "@/pages/portal/settings/Users.vue";
 import Account from "@/pages/portal/settings/Account.vue";
+import ActivePlans from "@/pages/portal/ActivePlans.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,6 +64,11 @@ const router = createRouter({
           path: "transactions",
           name: "transactions",
           component: Transactions
+        },
+        {
+          path: "active-plans",
+          name: "active plans",
+          component: ActivePlans
         },
         {
           path: "sales",

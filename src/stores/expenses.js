@@ -20,21 +20,21 @@ export const useExpenseStore = defineStore('expense-store', {
                this.expenses = response.data.data
                this.expensesData = response.data
            }).catch(err => {
-               this.errResponse =  err.response
+               this.errResponse =  err.response.data
            })
         },
          save(payload){
            client.post('/expenses', payload).then(response => {
                this.response = response.data
            }).catch(err => {
-               this.errResponse =  err.response
+               this.errResponse =  err.response.data
            })
         },
          remove(id){
            client.delete(`/expenses/${id}`).then(response => {
                this.response = response.data
            }).catch(err => {
-               this.errResponse =  err.response
+               this.errResponse =  err.response.data
            })
         },
     }

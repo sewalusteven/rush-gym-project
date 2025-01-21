@@ -20,21 +20,28 @@ export const useMemberStore = defineStore('member-store', {
            client.get('/members').then(response => {
                this.members = response.data.data
            }).catch(err => {
-               this.errResponse =  err.response
+               this.errResponse =  err.response.data
            })
         },
         save(payload){
             client.post('/members', payload).then(response => {
                 this.response = response.data
             }).catch(err => {
-                this.errResponse =  err.response
+                this.errResponse =  err.response.data
             })
         },
         remove(id){
             client.delete(`/members/${id}`).then(response => {
                 this.response = response.data
             }).catch(err => {
-                this.errResponse =  err.response
+                this.errResponse =  err.response.data
+            })
+        },
+        update(id, body){
+            client.put(`/members/${id}`, body).then(response => {
+                this.response = response.data
+            }).catch(err => {
+                this.errResponse =  err.response.data
             })
         },
     }

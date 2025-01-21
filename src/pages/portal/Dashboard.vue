@@ -3,16 +3,21 @@ import { UsersIcon, CurrencyDollarIcon, BanknotesIcon, UserPlusIcon } from "@her
 import StatCard from "@/components/StatCard.vue";
 import MembersTable from "@/components/MembersTable.vue";
 import SaleRecord from "@/components/SaleRecord.vue";
-import AddMemberDialog from "@/components/AddMemberDialog.vue";
-import {computed, onMounted, ref} from "vue";
+import MemberDialog from "@/components/MemberDialog.vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useSaleStore} from "@/stores/sales.js";
 import TransactionsTable from "@/components/TransactionsTable.vue";
 import {useCounterStore} from "@/stores/counter.js";
 import {useUtilities} from "@/composables/useUtilities.js";
+import {XMarkIcon} from "@heroicons/vue/24/outline/index.js";
+import MazSpinner from "maz-ui/components/MazSpinner";
+import MazPhoneNumberInput from "maz-ui/components/MazPhoneNumberInput";
+import {usePlansStore} from "@/stores/plans.js";
+import {useMemberStore} from "@/stores/members.js";
 
 const dialogOpen =  ref(false);
 const store =  useCounterStore()
-const { getCurrentDate } =  useUtilities()
+const { getCurrentDate, showNotification, validateEmail } =  useUtilities()
 
 const currDate = computed(() => getCurrentDate())
 
@@ -94,11 +99,86 @@ const totalMembers =  computed(() => {
   return (store.membersData)? store.membersData.total: 0;
 })
 
+
+const form =  ref({
+  name:"",
+  email: "",
+  phone: "",
+
+})
+const isLoading =  ref(false)
+
+const reset =  () => {
+  form.value = {
+    name:"",
+    email: "",
+    phone: "",
+  }
+}
+
+
+const phoneObj = ref({isValid: false})
+
+
+const planStore =  usePlansStore();
+const planItems = computed(() => planStore.planItems)
+
+
+
+const memberStore =  useMemberStore();
+const submit = () => {
+  isLoading.value =  true;
+
+  if(form.value.email !== "" && !validateEmail(form.value.email)){
+    form.value.email = "";
+    showNotification("Invalid Email","This is a wrong email", "error")
+    isLoading.value =  false;
+    return;
+  }
+
+  if(form.value.phone && !phoneObj.value.isValid){
+    form.value.phone= "";
+    showNotification("Invalid Phone","This is a wrong phone number", "error")
+    isLoading.value =  false;
+    return;
+  }
+
+  if(form.value.name === ""){
+    showNotification("Invalid Name","Please Insert a Name", "error")
+    isLoading.value =  false;
+    return;
+  }
+  form.value.phone  =  phoneObj.value.formatNational
+  memberStore.save(form.value)
+}
+
+const response =  computed(() => memberStore.response);
+const error =  computed(() => memberStore.errResponse);
+
+watch(response, (value) => {
+  if(value !== null){
+    isLoading.value =  false;
+    showNotification("Success","Member Added Successfully", "success")
+    memberStore.fetchMembers()
+    reset()
+  }
+})
+
+watch(error, (value) => {
+  if(value !== null){
+    isLoading.value =  false;
+    showNotification("Error","Member not added, Contact Support", "error")
+    reset()
+  }
+})
+
 onMounted(() => {
   store.fetchTransactionStats();
   store.fetchSalesStats();
   store.fetchExpensesStats();
   store.fetchMemberStats();
+  planStore.fetchPlans();
+  form.value.start = getCurrentDate()
 })
 </script>
 
@@ -128,7 +208,38 @@ onMounted(() => {
   </div>
 
 </div>
-  <AddMemberDialog :dialog-open="dialogOpen" @closeDialog="closeDialog" />
+  <MemberDialog v-if="dialogOpen">
+    <template #header>
+      <span class="font-bold">Member Registration</span>
+      <XMarkIcon class="w-5 h-5 cursor-pointer" @click="closeDialog" />
+    </template>
+    <template #body>
+      <div class="p-2 mt-4 w-full flex flex-col gap-2">
+        <div class="mb-4 flex flex-col gap-1">
+          <span class="font-medium capitalize">FullName</span>
+          <input v-model="form.name"  type="text" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none">
+        </div>
+        <div class="mb-4 flex flex-col gap-1">
+          <span class="font-medium capitalize">Email</span>
+          <input v-model="form.email"  type="email" class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none">
+        </div>
+        <div class="mb-4 flex flex-col gap-1">
+          <span class="font-medium capitalize">Phone</span>
+          <MazPhoneNumberInput
+              v-model="form.phone"
+              show-code-on-list
+              color="info"
+              :preferred-countries="['UG', 'KE']"
+              :default-country-code="`UG`"
+              @update="phoneObj = $event"
+              :success="phoneObj?.isValid"
+          />
+        </div>
+        <button @click="submit" class="bg-indigo-950 text-white mt-4  w-full py-3 rounded-md shadow-md capitalize justify-center font-bold items-center flex gap-2 "> <MazSpinner v-if="isLoading" size="1.5em"  color="white" /> <span class="text-white uppercase">Submit</span></button>
+
+      </div>
+    </template>
+  </MemberDialog>
 </template>
 
 <style scoped>

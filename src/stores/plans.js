@@ -9,7 +9,11 @@ export const usePlansStore = defineStore('plans-store', {
         response: null
     }),
     getters: {
-        planItems: state => state.plans.map(p => { return { label: p.name, value : p.id} })
+        planItems: state => {
+            let items =  [{label: 'Select Plan', value: ''}]
+            state.plans.forEach(m => { items.push({ label: m.name, value : m.id} ) })
+            return items;
+        }
     },
     actions: {
          fetchPlans(){

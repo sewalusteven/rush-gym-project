@@ -59,6 +59,10 @@ const getActiveTab = () => {
     activeTab.value = 'transactions'
   }
 
+  if (path.includes('active-plans')) {
+    activeTab.value = 'active-plans'
+  }
+
   if (path.includes('sales')) {
     activeTab.value = 'sales'
   }
@@ -135,17 +139,11 @@ onMounted(() => {
         </span>
           <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Transactions</span>
         </RouterLink>
-        <RouterLink to="/admin/sales" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'sales' && 'font-bold text-white bg-indigo-500'}`">
+        <RouterLink to="/admin/active-plans" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'active-plans' && 'font-bold text-white bg-indigo-500'}`">
         <span class="text-2xl block float-left">
-         <CurrencyDollarIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
+         <UserIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
         </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Sales</span>
-        </RouterLink>
-        <RouterLink to="/admin/expenses" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'expenses' && 'font-bold text-white bg-indigo-500'}`">
-        <span class="text-2xl block float-left">
-         <CreditCardIcon class="w-5 h-5 hover:rotate-[360deg] duration-300"/>
-        </span>
-          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Expenses</span>
+          <span :class="`text-base font-medium flex-1 duration-200 ${isMinified && 'hidden'}`">Active Memberships</span>
         </RouterLink>
 
 <!--        <RouterLink to="/admin/reports" :class="`text-gray-300 ${isMinified && 'justify-center'} text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:font-bold hover:text-white rounded-md mt-2 ${activeTab === 'reports' && 'font-bold text-white bg-indigo-500'}`">-->

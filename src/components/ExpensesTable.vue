@@ -57,7 +57,7 @@ onMounted(() => {
                { label: 'Narration' },
                 { label: 'Amount' },
                 { label: 'User' },
-                { label: 'Created At'}
+                { label: 'Date'}
                 ]">
       <MazTableRow  v-for="expense in expenses" :key="expense.id">
         <MazTableCell>

@@ -12,20 +12,12 @@ import {useSaleStore} from "@/stores/sales.js";
 import MazInputPrice from 'maz-ui/components/MazInputPrice'
 import MazSwitch from 'maz-ui/components/MazSwitch'
 import {useTransactionStore} from "@/stores/transactions.js";
+import MazPicker from "maz-ui/components/MazPicker";
 
 const {  showNotification, validateEmail } =  useUtilities()
 
 const emit = defineEmits(['closeDialog'])
-const props =  defineProps({
-  dialogOpen: {
-    type: Boolean,
-    default: false
-  }
-})
 
-const closeDialog = () => {
-  emit("closeDialog");
-}
 
 
 const form =  ref({
@@ -33,7 +25,8 @@ const form =  ref({
   serviceId: "",
   paymentMethodId: "",
   memberId: null,
-  narration: ""
+  narration: "",
+  paymentDate: ""
 })
 const isLoading =  ref(false)
 
@@ -43,7 +36,8 @@ const reset =  () => {
     serviceId: "",
     paymentMethodId: "",
     memberId: null,
-    narration: ""
+    narration: "",
+    paymentDate: ""
   }
 }
 
@@ -89,10 +83,11 @@ watch(response, (value) => {
 })
 
 watch(error, (value) => {
-  if(value !== null){
+  if(value && value.message){
     isLoading.value =  false;
-    showNotification("Error","Transaction not added, Contact Support", "error")
+    showNotification("Error",value.message, "error")
     reset()
+    emit('closeDialog')
   }
 })
 const formattedPrice = ref()
@@ -107,12 +102,12 @@ watch(memberExists, (val) => {
 </script>
 
 <template>
-  <Dialog :open="dialogOpen" @close="close" class="relative z-50">
+  <Dialog :open="true" @close="() => false" class="relative z-50">
     <div class="fixed inset-0 bg-black/30 flex w-screen items-center justify-center p-4">
       <DialogPanel class="w-1/2 mx-auto rounded bg-white p-4">
         <DialogTitle class="pb-3 border-b mb-3 flex justify-between">
           <span class="font-bold">Add Sale</span>
-          <XMarkIcon class="w-5 h-5 cursor-pointer" @click="closeDialog" />
+          <XMarkIcon class="w-5 h-5 cursor-pointer" @click="emit('closeDialog')" />
         </DialogTitle>
 
         <div class="p-2 mt-4 w-full grid grid-cols-2 gap-2">
@@ -154,8 +149,12 @@ watch(memberExists, (val) => {
               <DropDownSelect :default-value="form.serviceId" default-type="Services" :items="services" @chosen-item="(value) => { form.serviceId = value }" />
             </div>
             <div class="mb-4 flex flex-col gap-1">
-              <span class="font-medium capitalize">Narration</span>
-              <textarea  v-model="form.narration"  class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none"></textarea>
+              <span class="font-medium capitalize"> Date</span>
+              <MazPicker
+                  v-model="form.paymentDate"
+                  label="Transaction Date"
+                  color="primary"
+              />
             </div>
 
             <button @click="submit" class="bg-indigo-950 text-white mt-4  w-full py-3 rounded-md shadow-md capitalize justify-center font-bold items-center flex gap-2 "> <MazSpinner v-if="isLoading" size="1.5em"  color="white" /> <span class="text-white uppercase">Submit</span></button>
