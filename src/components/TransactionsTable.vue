@@ -94,7 +94,7 @@ const openDetails = (id) => {
           {{ transaction.category.split("_").join(" ") }}
         </MazTableCell>
         <MazTableCell>
-          {{ dateFormat(transaction.createdAt.toString(), "dS mmmm , yyyy") }}
+          {{ dateFormat(transaction.transactionDate.toString(), "dS mmmm , yyyy") }}
         </MazTableCell>
         <MazTableCell>
           <div class="flex flex-row gap-1">
