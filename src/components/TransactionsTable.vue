@@ -7,18 +7,28 @@ import MazPagination from 'maz-ui/components/MazPagination'
 import dateFormat from "dateformat";
 import {computed, onMounted, ref, watch} from "vue";
 import {useTransactionStore} from "@/stores/transactions.js";
-import {EyeIcon, XMarkIcon} from "@heroicons/vue/24/outline/index.js";
+import {EyeIcon, XMarkIcon, TrashIcon} from "@heroicons/vue/24/outline/index.js";
 import {number} from "maz-ui";
 import TransactionDialog from "@/components/TransactionDialog.vue";
+import {useUtilities} from "@/composables/useUtilities.js";
 
 const page = ref(1)
 const pageSize = ref(20)
 const totalPages = ref(1)
 const searchQuery = ref("")
 const transactionStore = useTransactionStore()
+const {showNotification} = useUtilities()
 
 const transactions = ref([])
 const transactionsData = computed(() => transactionStore.transactionsData)
+const response = computed(() => transactionStore.response)
+
+watch(response, (val) => {
+  if(val !== null){
+    showNotification("Success","Transaction Successful", "success")
+    transactionStore.fetch(1,10)
+  }
+})
 
 watch(transactionsData, (value) => {
   if(value !== null){
@@ -50,6 +60,9 @@ const findTransaction = (id) => {
 const openDetails = (id) => {
   selectedTransaction.value = findTransaction(id)
   dialog.value = true
+}
+const deleteTransaction = (id) => {
+  transactionStore.remove(id)
 }
 </script>
 
@@ -100,6 +113,9 @@ const openDetails = (id) => {
           <div class="flex flex-row gap-1">
             <button @click="openDetails(transaction.id)" class="bg-blue-800 p-2 text-white rounded-full" title="View Details">
               <EyeIcon class="w-4 h-4 " />
+            </button>
+            <button @click="deleteTransaction(transaction.id)" class="bg-red-800 p-2 text-white rounded-full" title="Delete">
+              <TrashIcon class="w-4 h-4 " />
             </button>
           </div>
 
