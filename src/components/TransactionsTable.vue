@@ -7,14 +7,19 @@ import MazPagination from 'maz-ui/components/MazPagination'
 import dateFormat from "dateformat";
 import {computed, onMounted, ref, watch} from "vue";
 import {useTransactionStore} from "@/stores/transactions.js";
-import {EyeIcon, XMarkIcon, TrashIcon} from "@heroicons/vue/24/outline/index.js";
+import {EyeIcon, XMarkIcon, TrashIcon, PencilIcon} from "@heroicons/vue/24/outline/index.js";
 import {number} from "maz-ui";
 import TransactionDialog from "@/components/TransactionDialog.vue";
 import {useUtilities} from "@/composables/useUtilities.js";
 
+import MazInputPrice from "maz-ui/components/MazInputPrice";
+import MazSpinner from "maz-ui/components/MazSpinner";
+
+
 const page = ref(1)
 const pageSize = ref(20)
 const totalPages = ref(1)
+const isLoading = ref(false)
 const searchQuery = ref("")
 const transactionStore = useTransactionStore()
 const {showNotification} = useUtilities()
@@ -22,11 +27,24 @@ const {showNotification} = useUtilities()
 const transactions = ref([])
 const transactionsData = computed(() => transactionStore.transactionsData)
 const response = computed(() => transactionStore.response)
+const err = computed(() => transactionStore.errResponse)
 
 watch(response, (val) => {
   if(val !== null){
     showNotification("Success","Transaction Successful", "success")
     transactionStore.fetch(1,10)
+    editDialog.value = false
+    selectedTransaction.value = null
+    isLoading.value = false
+  }
+})
+watch(err, (val) => {
+  if(val !== null){
+    showNotification("Success","Transaction Unsuccessful", "error")
+    transactionStore.fetch(1,10)
+    editDialog.value = false
+    selectedTransaction.value = null
+    isLoading.value = false
   }
 })
 
@@ -51,6 +69,7 @@ onMounted(() => {
 })
 
 const dialog = ref(false)
+const editDialog = ref(false)
 const selectedTransaction = ref()
 
 const findTransaction = (id) => {
@@ -61,9 +80,30 @@ const openDetails = (id) => {
   selectedTransaction.value = findTransaction(id)
   dialog.value = true
 }
+const openEditModal = (id) => {
+  selectedTransaction.value = findTransaction(id)
+  editForm.value = {
+    amount: selectedTransaction.value.amount,
+    narration: selectedTransaction.value.narration
+  }
+  editDialog.value = true
+}
+
 const deleteTransaction = (id) => {
   transactionStore.remove(id)
 }
+
+const editForm = ref({
+  amount: 0,
+  narration: ""
+})
+
+const update = () => {
+  isLoading.value = true
+  transactionStore.update(selectedTransaction.value.id, editForm.value)
+}
+
+const formattedPrice = ref()
 </script>
 
 <template>
@@ -113,6 +153,9 @@ const deleteTransaction = (id) => {
           <div class="flex flex-row gap-1">
             <button @click="openDetails(transaction.id)" class="bg-blue-800 p-2 text-white rounded-full" title="View Details">
               <EyeIcon class="w-4 h-4 " />
+            </button>
+            <button @click="openEditModal(transaction.id)" class="bg-gray-800 p-2 text-white rounded-full" title="Edit">
+              <PencilIcon class="w-4 h-4 " />
             </button>
             <button @click="deleteTransaction(transaction.id)" class="bg-red-800 p-2 text-white rounded-full" title="Delete">
               <TrashIcon class="w-4 h-4 " />
@@ -194,6 +237,34 @@ const deleteTransaction = (id) => {
           </div>
 
 
+        </div>
+      </template>
+    </TransactionDialog>
+
+    <TransactionDialog v-if="editDialog">
+      <template #header>
+        <span class="font-bold">Edit Transaction</span>
+        <XMarkIcon class="w-5 h-5 cursor-pointer" @click="() => { editDialog = false }" />
+      </template>
+
+      <template #body>
+        <div class="p-2 mt-4 w-full flex flex-col gap-2">
+          <div class="mb-4 flex flex-col gap-1">
+            <span class="font-medium capitalize">Amount</span>
+            <MazInputPrice
+                v-model="editForm.amount"
+                label="Enter Amount"
+                currency="UGX"
+                locale="en-US"
+                @formatted="formattedPrice = $event"
+            />
+          </div>
+
+          <div class="mb-4 flex flex-col gap-1">
+            <span class="font-medium capitalize">Narration</span>
+            <textarea  v-model="editForm.narration"  class="text-gray-600 p-2 border rounded-sm shadow-sm focus:outline-none"></textarea>
+          </div>
+          <button @click="update" class="bg-indigo-950 text-white mt-4  w-full py-3 rounded-md shadow-md capitalize justify-center font-bold items-center flex gap-2 "> <MazSpinner v-if="isLoading" size="1.5em"  color="white" /> <span class="text-white uppercase">Submit</span></button>
         </div>
       </template>
     </TransactionDialog>

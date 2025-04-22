@@ -37,5 +37,12 @@ export const useTransactionStore = defineStore('transaction-store', {
                this.errResponse =  err.response
            })
         },
+        update(id, payload){
+            client.put(`/transactions/${id}`, payload).then(response => {
+                this.response = response.data
+            }).catch(err => {
+                this.errResponse =  err.response.data
+            })
+        }
     }
 })
