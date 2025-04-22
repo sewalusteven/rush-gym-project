@@ -132,7 +132,9 @@ const formattedPrice = ref()
           {{ transaction.id }}
         </MazTableCell>
         <MazTableCell>
-          {{ transaction.narration }}
+          <div class="w-[200px] text-wrap">
+            {{ transaction.narration }}
+          </div>
         </MazTableCell>
         <MazTableCell class="flex gap-2">
           {{ number(transaction.amount ,'en-UG') }} UGX
